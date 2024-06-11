@@ -12,9 +12,11 @@
     "migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.2.0",
     "@auth/prisma-adapter": "^1.0.12",
     "@hookform/resolvers": "^3.3.3",
     "@libsql/client": "^0.6.2",
+    "@libsql/sqlite3": "^0.3.1",
     "@prisma/client": "^5.7.1",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -33,7 +35,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.31.0",
+    "drizzle-orm": "^0.31.1",
     "next": "14.0.4",
     "next-auth": "^5.0.0-beta.4",
     "next-themes": "^0.2.1",

@@ -1,12 +1,8 @@
 import NextAuth from "next-auth";
-// import { PrismaAdapter } from "@auth/prisma-adapter";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-// import { UserRole } from "@prisma/client";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { UserRole } from "@prisma/client";
 
-// import { db } from "@/lib/db";
-import { db, accounts, sessions, users, verificationTokens } from "@/db";
-// import { accounts, sessions, users, verificationTokens } from "@/db/schema"
-
+import { db } from "@/lib/db";
 import authConfig from "./auth.config";
 import { getUserById } from "@/data/user";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
@@ -17,11 +13,10 @@ export const {
   auth,
   signIn,
   signOut,
-} = NextAuth(
-  {
-    pages: {
-      signIn: "/auth/login",
-      error: "/auth/error",
+} = NextAuth({
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
   },
   events: {
     async linkAccount({ user }) {
@@ -106,8 +101,7 @@ export const {
       return token;
     }
   },
-  // adapter: PrismaAdapter(db),
-  adapter: DrizzleAdapter(db),
+  adapter: PrismaAdapter(db),
   session: { strategy: "jwt" }, 
   ...authConfig,
 })

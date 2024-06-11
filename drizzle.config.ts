@@ -1,13 +1,15 @@
 import 'dotenv/config';
 import { defineConfig } from "drizzle-kit";
 
+const db_url: string = 'file:' + process.env.DATABASE_URL as string;
+
 export default defineConfig({
   schema: './db/schema/*',
   out: './drizzle',
   // driver: 'turso',
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
-    // authToken: process.env.DATABASE_AUTH_TOKEN,
+    url: db_url,
+    authToken: '...',
   },
   dialect: 'sqlite'
 });

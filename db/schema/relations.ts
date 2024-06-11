@@ -1,24 +1,27 @@
-import { relations } from "drizzle-orm/relations";
-import { User} from "./User";
-import { UserRole} from "./UserRole";
-import { Account } from "./Account";
-import { TwoFactorConfirmation } from "./TwoFactorConfirmation";
+import { relations } from 'drizzle-orm/relations'
+import { users } from './users'
+import { userRoles } from './userRoles'
+import { accounts } from './accounts'
+import { twoFactorConfirmations } from './twoFactorConfirmations'
 
-export const AccountRelations = relations(Account, ({one}) => ({
-	User: one(User, {
-		fields: [Account.userId],
-		references: [User.id]
+export const AccountRelations = relations(accounts, ({ one }) => ({
+	User: one(users, {
+		fields: [accounts.userId],
+		references: [users.id],
 	}),
-}));
+}))
 
-export const UserRelations = relations(User, ({many}) => ({ 
-	Accounts: many(Account),
-	TwoFactorConfirmations: many(TwoFactorConfirmation),
-}));
+export const UserRelations = relations(users, ({ many }) => ({
+	Accounts: many(accounts),
+	TwoFactorConfirmations: many(twoFactorConfirmations),
+}))
 
-export const TwoFactorConfirmationRelations = relations(TwoFactorConfirmation, ({one}) => ({
-	User: one(User, {
-		fields: [TwoFactorConfirmation.userId],
-		references: [User.id]
-	}),
-}));
+export const TwoFactorConfirmationRelations = relations(
+	twoFactorConfirmations,
+	({ one }) => ({
+		User: one(users, {
+			fields: [twoFactorConfirmations.userId],
+			references: [users.id],
+		}),
+	})
+)
