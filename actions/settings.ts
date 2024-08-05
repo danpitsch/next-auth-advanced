@@ -3,7 +3,8 @@
 import * as z from "zod";
 import bcrypt from "bcryptjs";
 
-import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
+import { db, users } from "@/db";
 import { SettingsSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
@@ -57,12 +58,13 @@ export const settings = async (
     values.newPassword = undefined;
   }
 
-  await db.user.update({
-    where: { id: dbUser.id },
-    data: {
-      ...values
-    }
-  });
-
+  await db.update(users).set({
+    role: values.role,
+    name: values.name,
+    email: values.email,
+    password: values.password,
+    isTwoFactorEnabled: values.isTwoFactorEnabled === true ? '1' : '0',
+  }).where(sql`"id" = ${dbUser.id}`);
+  
   return { success: "Settings updated!" };
 }

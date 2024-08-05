@@ -9,7 +9,7 @@ import { id, uuid } from './schema-util'
 import { users } from './users'
 
 export const accounts = sqliteTable(
-	'account',
+	'accounts',
 	{
     // id: id(),
     userId: uuid()

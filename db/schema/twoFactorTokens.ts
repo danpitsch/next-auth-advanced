@@ -7,7 +7,7 @@ import {
 import { id } from './schema-util'
 
 export const twoFactorTokens = sqliteTable(
-	'twoFactorToken',
+	'twoFactorTokens',
 	{
 		id: id(),
 		email: text('email').notNull(),

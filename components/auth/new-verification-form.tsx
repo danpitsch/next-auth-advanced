@@ -25,6 +25,8 @@ export const NewVerificationForm = () => {
       return;
     }
 
+    console.log("components/auth/new-verification-form.tsx: onSubmit() token", token);
+    
     newVerification(token)
       .then((data) => {
         setSuccess(data.success);

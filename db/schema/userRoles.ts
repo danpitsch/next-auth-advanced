@@ -1,7 +1,7 @@
 import { sqliteTable, uniqueIndex, text } from 'drizzle-orm/sqlite-core'
 
 export const userRoles = sqliteTable(
-	'userRole',
+	'userRoles',
 	{
 		name: text('name').notNull(),
 	},

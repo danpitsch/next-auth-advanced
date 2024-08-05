@@ -9,16 +9,16 @@ import { id, createdAt, updatedAt } from './schema-util'
 import { userRoles } from "./userRoles";
 
 export const users = sqliteTable(
-	'user',
+	'users',
 	{
-    id: id(),
+		id: id(),
 		name: text('name'),
 		email: text('email').unique().notNull(),
 		emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
 		image: text('image'),
-		password: text('password'),
+		password: text('password').default('').notNull(),
     role: text('role').references(() => userRoles.name).default('USER').notNull(),
-		isTwoFactorEnabled: numeric('isTwoFactorEnabled').notNull(),
+		isTwoFactorEnabled: numeric('isTwoFactorEnabled').default('0').notNull(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
 	},

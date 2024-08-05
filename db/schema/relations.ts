@@ -1,8 +1,7 @@
 import { relations } from 'drizzle-orm/relations'
 import { users } from './users'
-import { userRoles } from './userRoles'
 import { accounts } from './accounts'
-import { twoFactorConfirmations } from './twoFactorConfirmations'
+// import { twoFactorConfirmations } from '../schema_backup/twoFactorConfirmations'
 
 export const AccountRelations = relations(accounts, ({ one }) => ({
 	User: one(users, {
@@ -13,15 +12,15 @@ export const AccountRelations = relations(accounts, ({ one }) => ({
 
 export const UserRelations = relations(users, ({ many }) => ({
 	Accounts: many(accounts),
-	TwoFactorConfirmations: many(twoFactorConfirmations),
+	// TwoFactorConfirmations: many(twoFactorConfirmations),
 }))
 
-export const TwoFactorConfirmationRelations = relations(
-	twoFactorConfirmations,
-	({ one }) => ({
-		User: one(users, {
-			fields: [twoFactorConfirmations.userId],
-			references: [users.id],
-		}),
-	})
-)
+// export const TwoFactorConfirmationRelations = relations(
+// 	twoFactorConfirmations,
+// 	({ one }) => ({
+// 		User: one(users, {
+// 			fields: [twoFactorConfirmations.userId],
+// 			references: [users.id],
+// 		}),
+// 	})
+// )

@@ -1,5 +1,6 @@
 "use server";
 
+import bcrypt from "bcryptjs";
 import * as z from "zod";
 import { AuthError } from "next-auth";
 
@@ -10,10 +11,14 @@ import { getUserByEmail } from "@/data/user";
 import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/mail";
 import { generateTwoFactorToken, generateVerificationToken } from "@/lib/tokens";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
+import { db, twoFactorTokens } from "@/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import { twoFactorConfirmations } from "@/db/schema/twoFactorConfirmations";
 
 export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: string) => {
+  console.log("/actions/login.ts > login() > values:", values);
+
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -22,7 +27,19 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
 
   const { email, password, code } = validatedFields.data;
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  console.log("/actions/login.ts > login() > email: ", email);
+  console.log("/actions/login.ts > login() > hashedPassword: ", hashedPassword);
+
   const existingUser = await getUserByEmail(email);
+
+  if (existingUser) {
+    console.log("/actions/login.ts > login() > existingUser: ", existingUser);
+  } else {
+    console.log("/actions/login.ts > login(): User Email not found");
+    return { error: "User Email not found" };
+  }
 
   if (!existingUser || !existingUser.email) {
     return { error: "Invalid credentials!" }
@@ -35,7 +52,9 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(existingUser.email);
 
-    await sendVerificationEmail(verificationToken.email, verificationToken.token, existingUser.name!);
+    console.log("/actions/login.ts > login() > verificationToken: ", verificationToken);
+
+    await sendVerificationEmail(verificationToken[0].email, verificationToken[0].token, existingUser.name!);
 
     return { success: "Confirmation email sent!" }
   }
@@ -59,23 +78,16 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
         return { error: "Code has expired!" }
       }
 
-      await db.twoFactorToken.delete({
-        where: { id: twoFactorToken.id }
-      });
+      await db.delete(twoFactorTokens).where(sql`"id" = ${twoFactorToken.id}`);
 
-      const existingConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
+      const existingTwoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
 
-      if (existingConfirmation) {
-        await db.twoFactorConfirmation.delete({
-          where: { id: existingConfirmation.id }
-        });
+      if (existingTwoFactorConfirmation) {
+        await db.delete(twoFactorConfirmations).where(sql`"id" = ${existingTwoFactorConfirmation.id}`);
       }
 
-      await db.twoFactorConfirmation.create({
-        data: {
-          userId: existingUser.id,
-        }
-      })
+      await db.insert(twoFactorConfirmations).values({ userId: existingUser.id });
+
     } else {
       const twoFactorToken = await generateTwoFactorToken(existingUser.email);
       await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token, existingUser.name!);
@@ -84,6 +96,7 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
   }
 
   try {
+    console.log("/actions/login.ts > login() > inside try block");
     await signIn("credentials", {
       email,
       password,

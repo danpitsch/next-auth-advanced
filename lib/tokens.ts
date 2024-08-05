@@ -1,80 +1,94 @@
-import { getVerificationTokenByEmail } from "@/data/verification-token";
-import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
-import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import { db } from "@/lib/db";
+import { eq, sql } from 'drizzle-orm'
+import {
+	db,
+	twoFactorTokens,
+	verificationTokens,
+	passwordResetTokens,
+} from '@/db'
 
-import crypto from "crypto";
-import { v4 as uuidv4 } from "uuid";
+import { getVerificationTokenByEmail } from '@/data/verification-token'
+import { getPasswordResetTokenByEmail } from '@/data/password-reset-token'
+import { getTwoFactorTokenByEmail } from '@/data/two-factor-token'
+
+import crypto from 'crypto'
+import { v4 as uuidv4 } from 'uuid'
 
 export const generateTwoFactorToken = async (email: string) => {
-  const token = crypto.randomInt(100_000, 1_000_000).toString();
-  const expires = new Date(new Date().getTime() + 5 * 60 * 1000);
+	const token = crypto.randomInt(100_000, 1_000_000).toString()
+	const expires = new Date(new Date().getTime() + 5 * 60 * 1000)
 
-  const existingToken = await getTwoFactorTokenByEmail(email);
+	const existingTwoFactorToken = await getTwoFactorTokenByEmail(email)
 
-  if (existingToken) {
-    await db.twoFactorToken.delete({
-      where: { id: existingToken.id }
-    })
-  };
+	if (existingTwoFactorToken) {
+		await db.delete(twoFactorTokens).where(sql`"id" = ${existingTwoFactorToken.id}`)
+	}
 
-  const twoFactorToken = db.twoFactorToken.create({
-    data: { 
-      token,
-      email,
-      expires
-    }
-  })
+	const twoFactorToken = await db
+		.insert(twoFactorTokens)
+		.values({
+			email: twoFactorTokens.email,
+			token: twoFactorTokens.token,
+			expires: twoFactorTokens.expires,
+		})
+    .returning();
 
-  return twoFactorToken;
+	return twoFactorToken[0];
 }
 
 export const generateVerificationToken = async (email: string) => {
-  const token = uuidv4();
-  const expires = new Date(new Date().getTime() + 3600 * 1000);
+	const token = uuidv4()
+	const expires = new Date(new Date().getTime() + 3600 * 1000)
+	console.log('/lib/tokens.ts: generateVerificationToken() email: ', email)
+	console.log('/lib/tokens.ts: generateVerificationToken() token: ', token)
+	console.log('/lib/tokens.ts: generateVerificationToken() expires: ', expires)
 
-  const existingToken = await getVerificationTokenByEmail(email);
+	const existingVerificationToken = await getVerificationTokenByEmail(email)
 
-  if (existingToken) {
-    await db.verificationToken.delete({
-      where: {
-        id: existingToken.id,
-      }
-    })
-  }
+	console.log('/lib/tokens.ts: generateVerificationToken: existingVerificationToken', existingVerificationToken)
 
-  const verificationToken = await db.verificationToken.create({
-    data: {
-      email,
-      token,
-      expires
-    }
-  });
+	if (existingVerificationToken) {
+		await db
+			.delete(verificationTokens)
+			.where(sql`"identifier" = ${existingVerificationToken.identifier}`)
+	}
 
-  return verificationToken;
+	const verificationToken = await db
+		.insert(verificationTokens)
+		.values({
+			email: email,
+			token: token,
+			expires: expires,
+		})
+		.returning({
+			email: verificationTokens.email,
+			token: verificationTokens.token,
+			expires: verificationTokens.expires,
+		})
+	console.log(
+		'/lib/tokens.ts: generateVerificationToken: verificationToken',
+		verificationToken
+	)
+
+	return verificationToken[0];
 }
 
 export const generateResetPasswordToken = async (email: string) => {
-  const token = uuidv4();
-  const expires = new Date(new Date().getTime() + 3600 * 1000);
+	const token = uuidv4()
+	const expires = new Date(new Date().getTime() + 3600 * 1000)
 
-  const existingToken = await getPasswordResetTokenByEmail(email);
+	const existingResetToken = await getPasswordResetTokenByEmail(email)
 
-  if (existingToken) {
-    await db.passwordResetToken.delete({
-      where: {
-        id: existingToken.id,
-      }
+	if (existingResetToken) {
+		await db.delete(passwordResetTokens).where(sql`"id" = ${existingResetToken.id}`)
+	}
+
+	const passwordResetToken = await db.insert(passwordResetTokens)
+    .values({
+      email: email,
+      token: token,
+      expires: expires,
     })
-  }
+    .returning();
 
-  const passwordResetToken = await db.passwordResetToken.create({
-    data: {
-      email,
-      token,
-      expires
-    }
-  });
-
-  return passwordResetToken;
+	return passwordResetToken[0];
 }

@@ -1,10 +1,9 @@
 import { sqliteTable, uniqueIndex, text } from 'drizzle-orm/sqlite-core'
 import { id } from './schema-util'
-
 import { users } from './users'
 
 export const twoFactorConfirmations = sqliteTable(
-	'twoFactorConfirmation',
+	'twoFactorConfirmations',
 	{
 		id: id(),
 		userId: text('userId')

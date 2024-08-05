@@ -9,10 +9,11 @@ import {
 import { id } from './schema-util'
 
 export const verificationTokens = sqliteTable(
-	'verificationToken',
+	'verificationTokens',
 	{
-    identifier: text("identifier").notNull(),
-		// email: text('email').notNull(),
+    identifier: text("identifier").notNull()
+    .$defaultFn(() => crypto.randomUUID()),
+		email: text('email').unique().notNull(),
 		token: text('token').notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 	},

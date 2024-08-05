@@ -1,26 +1,25 @@
 import {
-	sqliteTable,
-	uniqueIndex,
+	integer,
+  sqliteTable,
+	primaryKey,
+  uniqueIndex,
 	text,
 	numeric,
 } from 'drizzle-orm/sqlite-core'
 import { id } from './schema-util'
 
 export const passwordResetTokens = sqliteTable(
-	'passwordResetToken',
+	'passwordResetTokens',
 	{
-		id: id(),
-		email: text('email').notNull(),
+    id: text("id").notNull()
+    .$defaultFn(() => crypto.randomUUID()),
+		email: text('email').unique().notNull(),
 		token: text('token').notNull(),
-		expires: numeric('expires').notNull(),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 	},
-	(passwordResetToken) => {
-		return {
-			email_token_key: uniqueIndex('PasswordResetToken_email_token_key').on(
-				passwordResetToken.email,
-				passwordResetToken.token
-			),
-			token_key: uniqueIndex('PasswordResetToken_token_key').on(passwordResetToken.token),
-		}
-	}
+  (passwordResetToken) => ({
+    compositePk: primaryKey({
+      columns: [passwordResetToken.id, passwordResetToken.token],
+    }),
+  })
 )

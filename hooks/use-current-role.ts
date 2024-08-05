@@ -1,5 +1,3 @@
-import { UserRole } from "@prisma/client";
-import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 
 /**

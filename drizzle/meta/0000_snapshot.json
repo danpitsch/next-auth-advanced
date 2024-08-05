@@ -1,11 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a048d315-b0e0-4a0b-9658-b155e15da0a7",
+  "id": "aad4056a-45eb-4299-94a6-8d04032202c0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "account": {
-      "name": "account",
+    "accounts": {
+      "name": "accounts",
       "columns": {
         "userId": {
           "name": "userId",
@@ -88,10 +88,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "account_userId_user_id_fk": {
-          "name": "account_userId_user_id_fk",
-          "tableFrom": "account",
-          "tableTo": "user",
+        "accounts_userId_users_id_fk": {
+          "name": "accounts_userId_users_id_fk",
+          "tableFrom": "accounts",
+          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
@@ -103,18 +103,18 @@
         }
       },
       "compositePrimaryKeys": {
-        "account_provider_providerAccountId_pk": {
+        "accounts_provider_providerAccountId_pk": {
           "columns": [
             "provider",
             "providerAccountId"
           ],
-          "name": "account_provider_providerAccountId_pk"
+          "name": "accounts_provider_providerAccountId_pk"
         }
       },
       "uniqueConstraints": {}
     },
-    "authenticator": {
-      "name": "authenticator",
+    "authenticators": {
+      "name": "authenticators",
       "columns": {
         "credentialID": {
           "name": "credentialID",
@@ -174,8 +174,8 @@
         }
       },
       "indexes": {
-        "authenticator_credentialID_unique": {
-          "name": "authenticator_credentialID_unique",
+        "authenticators_credentialID_unique": {
+          "name": "authenticators_credentialID_unique",
           "columns": [
             "credentialID"
           ],
@@ -183,10 +183,10 @@
         }
       },
       "foreignKeys": {
-        "authenticator_userId_user_id_fk": {
-          "name": "authenticator_userId_user_id_fk",
-          "tableFrom": "authenticator",
-          "tableTo": "user",
+        "authenticators_userId_users_id_fk": {
+          "name": "authenticators_userId_users_id_fk",
+          "tableFrom": "authenticators",
+          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
@@ -198,23 +198,23 @@
         }
       },
       "compositePrimaryKeys": {
-        "authenticator_userId_credentialID_pk": {
+        "authenticators_userId_credentialID_pk": {
           "columns": [
             "credentialID",
             "userId"
           ],
-          "name": "authenticator_userId_credentialID_pk"
+          "name": "authenticators_userId_credentialID_pk"
         }
       },
       "uniqueConstraints": {}
     },
-    "passwordResetToken": {
-      "name": "passwordResetToken",
+    "passwordResetTokens": {
+      "name": "passwordResetTokens",
       "columns": {
         "id": {
           "name": "id",
           "type": "text",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
@@ -234,35 +234,35 @@
         },
         "expires": {
           "name": "expires",
-          "type": "numeric",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         }
       },
       "indexes": {
-        "PasswordResetToken_email_token_key": {
-          "name": "PasswordResetToken_email_token_key",
+        "passwordResetTokens_email_unique": {
+          "name": "passwordResetTokens_email_unique",
           "columns": [
-            "email",
-            "token"
-          ],
-          "isUnique": true
-        },
-        "PasswordResetToken_token_key": {
-          "name": "PasswordResetToken_token_key",
-          "columns": [
-            "token"
+            "email"
           ],
           "isUnique": true
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "passwordResetTokens_id_token_pk": {
+          "columns": [
+            "id",
+            "token"
+          ],
+          "name": "passwordResetTokens_id_token_pk"
+        }
+      },
       "uniqueConstraints": {}
     },
-    "session": {
-      "name": "session",
+    "sessions": {
+      "name": "sessions",
       "columns": {
         "sessionToken": {
           "name": "sessionToken",
@@ -288,10 +288,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "session_userId_user_id_fk": {
-          "name": "session_userId_user_id_fk",
-          "tableFrom": "session",
-          "tableTo": "user",
+        "sessions_userId_users_id_fk": {
+          "name": "sessions_userId_users_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
@@ -305,8 +305,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "twoFactorConfirmation": {
-      "name": "twoFactorConfirmation",
+    "twoFactorConfirmations": {
+      "name": "twoFactorConfirmations",
       "columns": {
         "id": {
           "name": "id",
@@ -333,10 +333,10 @@
         }
       },
       "foreignKeys": {
-        "twoFactorConfirmation_userId_user_id_fk": {
-          "name": "twoFactorConfirmation_userId_user_id_fk",
-          "tableFrom": "twoFactorConfirmation",
-          "tableTo": "user",
+        "twoFactorConfirmations_userId_users_id_fk": {
+          "name": "twoFactorConfirmations_userId_users_id_fk",
+          "tableFrom": "twoFactorConfirmations",
+          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
@@ -350,8 +350,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "twoFactorToken": {
-      "name": "twoFactorToken",
+    "twoFactorTokens": {
+      "name": "twoFactorTokens",
       "columns": {
         "id": {
           "name": "id",
@@ -403,8 +403,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "userRole": {
-      "name": "userRole",
+    "userRoles": {
+      "name": "userRoles",
       "columns": {
         "name": {
           "name": "name",
@@ -427,8 +427,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user": {
-      "name": "user",
+    "users": {
+      "name": "users",
       "columns": {
         "id": {
           "name": "id",
@@ -469,8 +469,9 @@
           "name": "password",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
         },
         "role": {
           "name": "role",
@@ -485,7 +486,8 @@
           "type": "numeric",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -501,12 +503,12 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "UPDATE_TIMESTAMP"
+          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {
-        "user_email_unique": {
-          "name": "user_email_unique",
+        "users_email_unique": {
+          "name": "users_email_unique",
           "columns": [
             "email"
           ],
@@ -521,10 +523,10 @@
         }
       },
       "foreignKeys": {
-        "user_role_userRole_name_fk": {
-          "name": "user_role_userRole_name_fk",
-          "tableFrom": "user",
-          "tableTo": "userRole",
+        "users_role_userRoles_name_fk": {
+          "name": "users_role_userRoles_name_fk",
+          "tableFrom": "users",
+          "tableTo": "userRoles",
           "columnsFrom": [
             "role"
           ],
@@ -538,11 +540,18 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "verificationToken": {
-      "name": "verificationToken",
+    "verificationTokens": {
+      "name": "verificationTokens",
       "columns": {
         "identifier": {
           "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -563,15 +572,23 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "verificationTokens_email_unique": {
+          "name": "verificationTokens_email_unique",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "verificationToken_identifier_token_pk": {
+        "verificationTokens_identifier_token_pk": {
           "columns": [
             "identifier",
             "token"
           ],
-          "name": "verificationToken_identifier_token_pk"
+          "name": "verificationTokens_identifier_token_pk"
         }
       },
       "uniqueConstraints": {}

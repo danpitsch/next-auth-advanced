@@ -1,12 +1,8 @@
 import NextAuth from "next-auth";
-// import { PrismaAdapter } from "@auth/prisma-adapter";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-// import { UserRole } from "@prisma/client";
-
-// import { db } from "@/lib/db";
-import { db, accounts, sessions, users, verificationTokens } from "@/db";
-// import { accounts, sessions, users, verificationTokens } from "@/db/schema"
-
+import { sql, eq } from "drizzle-orm";
+import { db, accounts, sessions, users, twoFactorConfirmations } from "@/db";
+import { UserRole } from "./next-auth.d";
 import authConfig from "./auth.config";
 import { getUserById } from "@/data/user";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
@@ -25,16 +21,12 @@ export const {
   },
   events: {
     async linkAccount({ user }) {
-      await db.user.update({
-        where: { id: user.id },
-        data: {
-          emailVerified: new Date,
-        }
-      })
+      await db.update(users).set({ emailVerified: new Date() }).where(sql`"id" = ${user.id}`);
     }
   },
   callbacks: {
     async signIn({ user, account }) {
+      console.log("auth.ts > signIn() > inside callback");
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") {
         return true;
@@ -55,9 +47,7 @@ export const {
         }
 
         // Delete two factor confirmation for next sign in
-        await db.twoFactorConfirmation.delete({
-          where: { id: twoFactorConfirmation.id }
-        })
+        await db.delete(twoFactorConfirmations).where(sql`"id" = ${twoFactorConfirmation.id}`);
       }
 
       return true;
@@ -106,8 +96,6 @@ export const {
       return token;
     }
   },
-  // adapter: PrismaAdapter(db),
-  adapter: DrizzleAdapter(db),
   session: { strategy: "jwt" }, 
   ...authConfig,
 })

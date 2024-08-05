@@ -16,5 +16,5 @@ export const createdAt = () =>
 
 export const updatedAt = () =>
 	text('updated_at')
-		.default(sql`UPDATE_TIMESTAMP`)
+		.default(sql`CURRENT_TIMESTAMP`)
 		.notNull()

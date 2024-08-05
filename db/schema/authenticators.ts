@@ -8,7 +8,7 @@ import {
 import { users } from './users'
 
 export const authenticators = sqliteTable(
-  "authenticator",
+  "authenticators",
   {
     credentialID: text("credentialID").notNull().unique(),
     userId: text("userId")

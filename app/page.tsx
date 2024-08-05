@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { LoginButton } from "@/components/auth/login-button"
 
+console.log("@/app/page.tsx: Home")
+
 const font = Poppins({
   subsets: ["latin"],
   weight: ["600"],
@@ -11,7 +13,7 @@ const font = Poppins({
 
 export default function Home() {
   // bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800
-
+  
   return (
     <main className="flex relative h-full flex-col items-center bg-slate-950 justify-center">
       <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)]"></div>

@@ -1,6 +1,7 @@
 "use server";
 
-import { db } from "@/lib/db";
+import { eq, sql } from "drizzle-orm";
+import { db, userRoles, users } from "@/db";
 
 import bcrypt from "bcryptjs";
 import * as z from "zod";
@@ -20,60 +21,29 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const { email, password, name } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  console.log("/actions/register.ts: register: email", email);
+  console.log("/actions/register.ts: register: hashedPassword", hashedPassword);
+  console.log("/actions/register.ts: register: name", name);
+  console.log("/actions/register.ts: register: creating user");
+
   const existingUser = await getUserByEmail(email);
 
-  if (existingUser) {
+  if (!existingUser) {
+    console.log("/actions/register.ts: register: no existing user found");
+  } else {
     return { error: "Email is already taken" };
   }
 
-  // console.log("/actions/register.ts: register: email", email);
-  // console.log("/actions/register.ts: register: hashedPassword", hashedPassword);
-  // console.log("/actions/register.ts: register: name", name);
-  // console.log("/actions/register.ts: register: creating user");
-
-  await db.userRole.findUnique({
-    where: { name: "USER" },
-    select: { name: true },
-  }).then((role) => {
-    // console.log("user role", role);
-    if (!role) {
-      let roleData: Prisma.UserRoleCreateInput
-      roleData = { name: "USER" as string } // Ensure name is always a string
-      // console.log("Creating USER role:", roleData);
-      const userRole = db.userRole.create({
-        data: roleData,
-      });
-      // console.log("userRole", userRole);
-    }
-  })
-  
-  await db.userRole.findUnique({
-    where: { name: "ADMIN" },
-    select: { name: true },
-  }).then((role) => {
-    // console.log("admin role", role);
-    if (!role) {
-      let roleData: Prisma.UserRoleCreateInput
-      roleData = { name: "ADMIN" as string } // Ensure name is always a string
-      // console.log("Creating ADMIN role:", roleData);
-      const adminRole = db.userRole.create({
-        data: roleData,
-      });
-      // console.log("adminRole", adminRole);
-    }
-  })
-
-  await db.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    }
-  });
+  const newUser = await db.insert(users).values([{
+    name: name,
+    email: email,
+    password: hashedPassword,
+    role: 'USER'
+  }]);
 
   const verificationToken = await generateVerificationToken(email);
 
-  // console.log("/actions/register.ts: register: verificationToken", verificationToken);
+  console.log("/actions/register.ts: register: verificationToken", verificationToken);
 
   await sendVerificationEmail(verificationToken.email, verificationToken.token, name);
 
