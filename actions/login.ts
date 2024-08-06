@@ -54,7 +54,7 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
 
     console.log("/actions/login.ts > login() > verificationToken: ", verificationToken);
 
-    await sendVerificationEmail(verificationToken[0].email, verificationToken[0].token, existingUser.name!);
+    await sendVerificationEmail(verificationToken.email, verificationToken.token, existingUser.name!);
 
     return { success: "Confirmation email sent!" }
   }

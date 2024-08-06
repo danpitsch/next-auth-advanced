@@ -37,12 +37,25 @@ export const schema = {
 };
  
 const db_url: string = process.env.DATABASE_URL as string;
+const db_sync_url: string = process.env.DATABASE_SYNC_URL as string;
 const db_auth: string = process.env.DATABASE_AUTH_TOKEN as string;
 
-console.log(`auth.config.ts > DATABASE_URL: ${process.env.DATABASE_URL}`);
-console.log(`auth.config.ts > DATABASE_AUTH_TOKEN: ${process.env.DATABASE_AUTH_TOKEN}`);
+console.log(`auth.config.ts > DATABASE_URL: `, db_url);
+console.log(`auth.config.ts > DATABASE_SYNC_URL: `, db_sync_url);
+console.log(`auth.config.ts > DATABASE_AUTH_TOKEN: `, db_auth);
 
-const client = createClient({ url: process.env.DATABASE_URL as string, authToken: process.env.DATABASE_AUTH_TOKEN as string});
+export const libsqlClient = createClient({
+  url: db_url,
+  syncUrl: db_sync_url,
+  authToken: db_auth,
+  syncInterval: 60,
+});
 
-export const db = drizzle(client, { schema });
+console.log(`auth.config.ts: syncing database...`);
+
+libsqlClient.sync()
+
+console.log(`auth.config.ts: database sync complete`);
+
+export const db = drizzle(libsqlClient, { schema });
 
