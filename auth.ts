@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { sql, eq } from "drizzle-orm";
 import { db, accounts, sessions, users, twoFactorConfirmations } from "@/db";
 import { UserRole } from "./next-auth.d";
@@ -16,8 +15,8 @@ export const {
 } = NextAuth(
   {
     pages: {
-      signIn: "/auth/login",
-      error: "/auth/error",
+    signIn: "/auth/login",
+    error: "/auth/error",
   },
   events: {
     async linkAccount({ user }) {

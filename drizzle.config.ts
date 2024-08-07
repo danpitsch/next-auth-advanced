@@ -16,10 +16,10 @@ export default defineConfig({
   driver: 'turso',
   dbCredentials: {
       // SQLite3 Local
-      url: db_url,
+      // url: db_url,
       // authToken: '',
       // Turso Hosted
-      // url: db_sync_url,
+      url: db_sync_url,
       authToken: db_auth,
   },
   dialect: 'sqlite'

@@ -20,29 +20,28 @@ interface TwoFactorEmailProps {
   name: string;
 }
 export const TwoFactorEmail = ({ token, name }: TwoFactorEmailProps) => {
-  return (
-    <Html>
+  const htmlBody = 
+    `<Html>
       <Head />
-      <Preview>Hi {name}, We noticed a recent attempt to login to your 🔐Auth account. If this was you</Preview>
-      <Body style={main}>
+      <Preview>Hi ${name}, We noticed a recent attempt to login to your 🔐Auth account. If this was you</Preview>
+      <Body style="main">
         <Tailwind>
           <Container>
-            <Section style={logo}>
+            <Section style="logo">
               <Img
-                src={`https://korabi-ecommerce-admin.vercel.app/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdncmjp41z%2Fimage%2Fupload%2Fv1704195942%2Fzxr7vlhj7zsvffcclohc.png&w=1920&q=75`}
-              />
+                src='https://korabi-ecommerce-admin.vercel.app/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdncmjp41z%2Fimage%2Fupload%2Fv1704195942%2Fzxr7vlhj7zsvffcclohc.png&w=1920&q=75'              />
             </Section>
 
-            <Section style={content}>
+            <Section style="content">
               <Img
-                width={620}
-                src={`https://korabi-ecommerce-admin.vercel.app/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdncmjp41z%2Fimage%2Fupload%2Fv1704195773%2Fskhemiousn5nzs3vib1d.png&w=1920&q=75`}
+                width='620'
+                src='https://korabi-ecommerce-admin.vercel.app/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdncmjp41z%2Fimage%2Fupload%2Fv1704195773%2Fskhemiousn5nzs3vib1d.png&w=1920&q=75'
               />
 
-              <Row style={{ ...boxInfos, paddingBottom: "0" }}>
+              <Row style=" ...boxInfos, paddingBottom: "0" ">
                 <Column>
                   <Heading className="text-3xl font-bold text-center">
-                    Hi {name},
+                    Hi ${name},
                   </Heading>
                   <Heading
                     as="h2"
@@ -56,31 +55,31 @@ export const TwoFactorEmail = ({ token, name }: TwoFactorEmailProps) => {
                   <Text className="text-xl mt-3">
                     This is your 2FA code: 
                     <br />
-                    <span className="text-2xl mt-2 font-bold tracking-wider">{token}</span>
+                    <span className="text-2xl mt-2 font-bold tracking-wider">${token}</span>
                     <br />
                     <span className="mt-2 text-lg">This code will expire in 5 minutes.</span>
                   </Text>
 
-                  <Text style={paragraph}>
+                  <Text style="paragraph">
                     If this was not you, you can ignore this email.
                   </Text>
                 </Column>
               </Row>
             </Section>
 
-            <Section style={containerImageFooter}>
+            <Section style="containerImageFooter">
               <Img
-                width={620}
-                src={`https://korabi-ecommerce-admin.vercel.app/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdncmjp41z%2Fimage%2Fupload%2Fv1704195824%2Fpcgb9zsaecqlryiuwifi.png&w=1920&q=75`}
+                width='620'
+                src='https://korabi-ecommerce-admin.vercel.app/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdncmjp41z%2Fimage%2Fupload%2Fv1704195824%2Fpcgb9zsaecqlryiuwifi.png&w=1920&q=75'
               />
             </Section>
 
             <Text
-              style={{
+              style="
                 textAlign: "center",
                 fontSize: 12,
                 color: "rgb(0,0,0, 0.7)",
-              }}
+              "
             >
               © 2024 | 🔐 Auth
             </Text>
@@ -88,7 +87,8 @@ export const TwoFactorEmail = ({ token, name }: TwoFactorEmailProps) => {
         </Tailwind>
       </Body>
     </Html>
-  );
+  );`
+  return htmlBody;
 };
 
 export default TwoFactorEmail;

@@ -30,10 +30,10 @@ export const VerificationEmail = ({
           <Section style="logo">
             <Img src="https://korabi-ecommerce-admin.vercel.app/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdncmjp41z%2Fimage%2Fupload%2Fv1704195942%2Fzxr7vlhj7zsvffcclohc.png&w=1920&q=75" />
           </Section>
-
+          <p/>
           <Section style="content">
             <Img width="620" src="https://korabi-ecommerce-admin.vercel.app/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdncmjp41z%2Fimage%2Fupload%2Fv1704195773%2Fskhemiousn5nzs3vib1d.png&w=1920&q=75" />
-
+            <p/>
             <Row style=" ...boxInfos, paddingBottom: '0' ">
               <Column>
                 <Heading
@@ -45,6 +45,7 @@ export const VerificationEmail = ({
                 >
                   Hi ${name},
                 </Heading>
+                <p/>
                 <Heading
                   as="h2"
                   style="
@@ -53,14 +54,14 @@ export const VerificationEmail = ({
                     textAlign: 'start',
                   "
                 >
-                  We noticed a recent attempt to Register for a 🔐Auth account with your email.
+                  <p>We noticed a recent attempt to Register for a 🔐Auth account with your email.</p>
                 </Heading>
 
                 <Text style="paragraph">
-                  If this was you, click <a href=${confirmLink}>here</a>
+                  <p>If this was you, click <a href=${confirmLink}>here</a></p>
                 </Text>
                 <Text style=" ...paragraph, marginTop: -5 ">
-                  If this wasn't you, please ignore this email.
+                  <p>If this wasn't you, please ignore this email.</p>
                 </Text>
               </Column>
             </Row>

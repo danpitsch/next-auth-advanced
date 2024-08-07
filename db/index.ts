@@ -40,22 +40,25 @@ const db_url: string = process.env.DATABASE_URL as string;
 const db_sync_url: string = process.env.DATABASE_SYNC_URL as string;
 const db_auth: string = process.env.DATABASE_AUTH_TOKEN as string;
 
-console.log(`auth.config.ts > DATABASE_URL: `, db_url);
-console.log(`auth.config.ts > DATABASE_SYNC_URL: `, db_sync_url);
-console.log(`auth.config.ts > DATABASE_AUTH_TOKEN: `, db_auth);
+// console.log("@/db/index.ts > environment variables: ", process.env);
+
+console.log(`@/db/index.ts > DATABASE_URL: `, db_url);
+console.log(`@/db/index.ts > DATABASE_SYNC_URL: `, db_sync_url);
+console.log(`@/db/index.ts > DATABASE_AUTH_TOKEN length: `, db_auth.length);
 
 export const libsqlClient = createClient({
-  url: db_url,
-  syncUrl: db_sync_url,
+  // url: db_url,
+  url: db_sync_url,
+  // syncUrl: db_sync_url,
   authToken: db_auth,
-  syncInterval: 60,
+  // syncInterval: 60,
 });
 
-console.log(`auth.config.ts: syncing database...`);
+// console.log(`@/db/index.ts: syncing database...`);
 
-libsqlClient.sync()
+// libsqlClient.sync()
 
-console.log(`auth.config.ts: database sync complete`);
+// console.log(`@/db/index.ts: database sync complete`);
 
 export const db = drizzle(libsqlClient, { schema });
 
